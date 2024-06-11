@@ -16,7 +16,7 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/product_images/", response_model=schemas.ProductImageResponse)
+@router.post("/", response_model=schemas.ProductImageResponse)
 def create_product_image(product_image: schemas.ProductImageCreate, db: Session = Depends(get_db)):
     return crud.create_product_image(db=db, product_image=product_image)
 

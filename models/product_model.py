@@ -11,4 +11,7 @@ class ProductModel(Base):
     description = Column(Text)
     price = Column(DECIMAL(10, 2), nullable=False)
     stock = Column(Integer, nullable=False)
+    category = Column(String(100), nullable=False)
+    cost = Column(DECIMAL(10, 2), nullable=False)
+    brand = Column(String(100), nullable=False)
     created_at = Column(TIMESTAMP, default=datetime.utcnow)

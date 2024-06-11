@@ -3,17 +3,24 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
+from enum import Enum
+
+class UserRole(str, Enum):
+    customer = "customer"
+    admin = "admin"
 
 class UserCreate(BaseModel):
     username: str
     email: str
     password: str
+    role: Optional[UserRole] = UserRole.customer
 
 class UserResponse(BaseModel):
     user_id: int
     username: str
     email: str
     created_at: datetime
+    role: UserRole
 
     class Config:
         orm_mode: True
