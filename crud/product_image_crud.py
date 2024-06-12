@@ -19,14 +19,13 @@ def get_product_images(db: Session, product_id: int, skip: int = 0, limit: int =
 def get_product_image(db: Session, image_id: int):
     return db.query(models.ProductImageModel).filter(models.ProductImageModel.image_id == image_id).first()
 
-def update_product_image(db: Session, image_id: int, product_image: schemas.ProductImageCreate):
-    db_product_image = db.query(models.ProductImageModel).filter(models.ProductImageModel.image_id == image_id).first()
-    if db_product_image:
-        for key, value in product_image.dict().items():
-            setattr(db_product_image, key, value)
+def update_product_image(db: Session, image_id: int, image_url: str):
+    db_image = db.query(models.ProductImageModel).filter(models.ProductImageModel.image_id == image_id).first()
+    if db_image:
+        db_image.image_url = image_url
         db.commit()
-        db.refresh(db_product_image)
-    return db_product_image
+        db.refresh(db_image)
+    return db_image
 
 def delete_product_images(db: Session, product_id: int):
     db.query(models.ProductImageModel).filter(models.ProductImageModel.product_id == product_id).delete()
