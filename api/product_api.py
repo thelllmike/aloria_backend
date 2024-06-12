@@ -43,16 +43,21 @@ def read_product(product_id: int, db: Session = Depends(get_db)):
     product = product_cruds.get_product(db, product_id=product_id)
     if product is None:
         raise HTTPException(status_code=404, detail="Product not found")
+    
+    product_images = image_cruds.get_product_images(db, product_id=product_id)
+    product.images = product_images
+    
     return product
 
-@router.put("/products/{product_id}", response_model=schemas.ProductResponse)
-def update_product(product_id: int, product: schemas.ProductUpdate, db: Session = Depends(get_db)):
-    db_product = product_cruds.get_product(db, product_id=product_id)
-    if db_product is None:
-        raise HTTPException(status_code=404, detail="Product not found")
-    return product_cruds.update_product(db=db, product_id=product_id, product=product)
 
-@router.put("/products/{product_id}/image", response_model=schemas.ProductResponse)
+# @router.put("/products/{product_id}", response_model=schemas.ProductResponse)
+# def update_product(product_id: int, product: schemas.ProductUpdate, db: Session = Depends(get_db)):
+#     db_product = product_cruds.get_product(db, product_id=product_id)
+#     if db_product is None:
+#         raise HTTPException(status_code=404, detail="Product not found")
+#     return product_cruds.update_product(db=db, product_id=product_id, product=product)
+
+@router.put("/products/{product_id}", response_model=schemas.ProductResponse)
 def update_product_and_image(product_id: int, product: schemas.ProductUpdate, image_url: str = Body(...), db: Session = Depends(get_db)):
     db_product = product_cruds.get_product(db, product_id=product_id)
     if db_product is None:
