@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api import userapi, addressapi, skintype_api, product_api, product_image_api, suggestion_api, cart_api, login_history_api, order_api, order_item_api, user_skin_type_api, login_api
+from api import userapi, addressapi, skintype_api, product_api, product_image_api, suggestion_api, cart_api, login_history_api, order_api, order_item_api, user_skin_type_api, login_api ,chat_api
 import models.models as models
 from database import engine
 
@@ -34,6 +34,7 @@ app.include_router(order_api.router, prefix="/orders", tags=["orders"])
 app.include_router(order_item_api.router, prefix="/order_items", tags=["order_items"])
 app.include_router(user_skin_type_api.router, prefix="/user_skin_types", tags=["user_skin_types"])
 app.include_router(login_api.router, tags=["login"])
+app.include_router(chat_api.router, prefix="/api", tags=["chat"])
 
 if __name__ == "__main__":
     import uvicorn
