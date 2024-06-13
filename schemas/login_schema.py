@@ -6,6 +6,7 @@ class Token(BaseModel):
     access_token: str
     token_type: str
     role: str
+    user_id: int  # Add user_id to the response schema
 
 
 class TokenData(BaseModel):

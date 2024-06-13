@@ -1,5 +1,6 @@
 # api/login_api.py
 
+from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -22,7 +23,9 @@ def get_db():
         db.close()
 
 @router.post("/token", response_model=schemas.Token)
-def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+def login_for_access_token(
+    db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()
+) -> Any:
     user = crud.authenticate_user(db, username=form_data.username, password=form_data.password)
     if not user:
         raise HTTPException(
@@ -33,4 +36,4 @@ def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2Passw
     logging.info(f"User {user.username} has role {user.role}")
     access_token_expires = timedelta(minutes=30)
     access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
-    return {"access_token": access_token, "token_type": "bearer", "role": user.role}
+    return {"access_token": access_token, "token_type": "bearer", "role": user.role, "user_id": user.user_id}
