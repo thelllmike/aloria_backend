@@ -1,5 +1,6 @@
 # api/order_api.py
 
+from typing import Dict, List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 import crud.order_crud as crud
@@ -45,3 +46,9 @@ def delete_order(order_id: int, db: Session = Depends(get_db)):
     if db_order is None:
         raise HTTPException(status_code=404, detail="Order not found")
     return crud.delete_order(db=db, order_id=order_id)
+
+
+@router.get("/order-details/")
+def read_order_details(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    order_details = crud.get_order_details(db, skip=skip, limit=limit)
+    return order_details
