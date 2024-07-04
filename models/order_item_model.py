@@ -1,7 +1,12 @@
-# models/order_item_model.py
-
-from sqlalchemy import Column, Integer, DECIMAL, ForeignKey
+from sqlalchemy import Column, Integer, DECIMAL, ForeignKey, Enum
 from database import Base
+import enum
+
+class OrderStatus(enum.Enum):
+    pending = "pending"
+    shipped = "shipped"
+    delivered = "delivered"
+    cancelled = "cancelled"
 
 class OrderItemModel(Base):
     __tablename__ = "OrderItems"
@@ -10,3 +15,4 @@ class OrderItemModel(Base):
     product_id = Column(Integer, ForeignKey('Products.product_id', ondelete='CASCADE'), nullable=False)
     quantity = Column(Integer, nullable=False)
     price = Column(DECIMAL(10, 2), nullable=False)
+    status = Column(Enum(OrderStatus), default=OrderStatus.pending, nullable=False)

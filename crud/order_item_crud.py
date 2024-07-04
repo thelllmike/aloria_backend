@@ -1,5 +1,3 @@
-# crud/order_item_crud.py
-
 from sqlalchemy.orm import Session
 import models.order_item_model as models
 import schemas.order_item_schema as schemas
@@ -32,3 +30,13 @@ def delete_order_item(db: Session, order_item_id: int):
         db.delete(db_order_item)
         db.commit()
     return db_order_item
+
+def update_order_item_status(db: Session, order_item_id: int, status: schemas.OrderStatus):
+    db_order_item = db.query(models.OrderItemModel).filter(models.OrderItemModel.order_item_id == order_item_id).first()
+    if db_order_item:
+        db_order_item.status = status
+        db.commit()
+        db.refresh(db_order_item)
+    return db_order_item
+
+

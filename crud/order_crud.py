@@ -54,7 +54,9 @@ def get_order_details(db: Session, skip: int = 0, limit: int = 100):
         address_models.Address.country.label('country'),
         order_item_models.OrderItemModel.quantity.label('quantity'),
         models.OrderModel.order_date.label('order_date'),
-        order_item_models.OrderItemModel.price.label('price')
+        order_item_models.OrderItemModel.price.label('price'),
+        order_item_models.OrderItemModel.order_item_id.label('order_item_id'),
+        order_item_models.OrderItemModel.status.label('status')
     ).join(
         order_item_models.OrderItemModel, order_item_models.OrderItemModel.order_id == models.OrderModel.order_id
     ).join(
@@ -68,13 +70,16 @@ def get_order_details(db: Session, skip: int = 0, limit: int = 100):
     result = []
     for row in query:
         result.append({
+            "order_item_id": row.order_item_id,
             "product_name": row.product_name,
             "customer": row.customer,
             "category": row.category,
             "address": f"{row.address_line1}, {row.address_line2}, {row.city}, {row.state}, {row.postal_code}, {row.country}",
             "quantity": row.quantity,
             "order_date": row.order_date,
-            "price": row.price
+            "price": row.price,
+            "status": row.status.value  # assuming status is an enum, use .value to get the string representation
         })
 
     return result
+

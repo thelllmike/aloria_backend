@@ -1,5 +1,3 @@
-# api/order_item_api.py
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 import crud.order_item_crud as crud
@@ -45,3 +43,11 @@ def delete_order_item(order_item_id: int, db: Session = Depends(get_db)):
     if db_order_item is None:
         raise HTTPException(status_code=404, detail="Order item not found")
     return crud.delete_order_item(db=db, order_item_id=order_item_id)
+
+
+@router.put("/item/{order_item_id}/", response_model=schemas.OrderItemResponse)
+def update_order_item_status(order_item_id: int, status_update: schemas.OrderItemStatusUpdate, db: Session = Depends(get_db)):
+    db_order_item = crud.get_order_item(db, order_item_id=order_item_id)
+    if db_order_item is None:
+        raise HTTPException(status_code=404, detail="Order item not found")
+    return crud.update_order_item_status(db=db, order_item_id=order_item_id, status=status_update.status)
